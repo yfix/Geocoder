@@ -1,9 +1,39 @@
 CHANGELOG
 =========
 
-### 2.4.3 (????-??-??) ###
+### 2.8.0 (2014-10-03)
 
-n/a
+* Added: Allow for greater flexibility in setting curl parameters by passing in
+  an array.
+* Removed: GeoIP2 Omni support
+* Removed: Cloudmade provider. They discontinued their service Apr/2014
+
+### 2.7.0 (2014-09-14) ###
+
+* Added: **new** provider: `OpenCageProvider`
+  [geocoder.opencagedata.com](http://geocoder.opencagedata.com/)
+* Fixed: `MapQuestProvider` when no relevant data are fetched
+* Fixed: Ensure mb `formatString` is congruent to standard `ucwords()`
+  functionality
+
+### 2.6.0 (2014-09-02) ###
+
+* Added: `region` and `regionCode` to GeoIP2Provider
+* Added: throw `InvalidCredentialsException` with GoogleMapsBusinessProvider
+* Added: support in MapQuestProvider for licensed endpoints (#318)
+* Added: it is now possible to set the user agent in `CurlHttpAdapter`
+* Fixed: google maps provider test
+* Fixed: GeoPlugin returns 206 for anonymous proxies
+* Removed: Google's sensor parameter
+* Updated: Travis-CI config, doc, tests
+
+### 2.5.0 (2014-05-16) ###
+
+* Added: ability to set timeouts for `CurlHttpAdapter`
+* Added: support for a Google Maps API key
+* Added: premium support to `GeocoderCaProvider` + tests
+* Added: test against `hhvm-nightly` on Travis-CI
+* Updated: documentation
 
 ### 2.4.2 (2014-01-05) ###
 

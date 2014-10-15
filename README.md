@@ -17,7 +17,8 @@ Currently, there are the following adapters:
 * `CurlHttpAdapter` to use [cURL](http://php.net/manual/book.curl.php);
 * `GuzzleHttpAdapter` to use [Guzzle](https://github.com/guzzle/guzzle), PHP 5.3+ HTTP client and framework for building RESTful web service clients;
 * `SocketHttpAdapter` to use a [socket](http://www.php.net/manual/function.fsockopen.php);
-* `ZendHttpAdapter` to use [Zend Http Client](http://framework.zend.com/manual/2.0/en/modules/zend.http.client.html).
+* `ZendHttpAdapter` to use [Zend Http Client](http://framework.zend.com/manual/2.0/en/modules/zend.http.client.html);
+* `GeoIP2Adapter` to use [GeoIP2 Database Reader](https://github.com/maxmind/GeoIP2-php#database-reader) or the [Webservice Client](https://github.com/maxmind/GeoIP2-php#web-service-client) by MaxMind.
 
 
 ### Providers ###
@@ -26,34 +27,37 @@ _Providers_ contain the logic to extract useful information.
 
 Currently, there are many providers for the following APIs:
 
-* [FreeGeoIp](http://freegeoip.net/static/index.html) as IP-Based geocoding provider;
-* [HostIp](http://www.hostip.info/) as IP-Based geocoding provider;
-* [IpInfoDB](http://www.ipinfodb.com/) as IP-Based geocoding provider (city precision);
-* [Google Maps](http://code.google.com/apis/maps/documentation/geocoding/) as Address-Based geocoding and reverse geocoding provider;
-* [Google Maps for Business](https://developers.google.com/maps/documentation/business/webservices) as Address-Based geocoding and reverse geocoding provider;
-* [Bing Maps](http://msdn.microsoft.com/en-us/library/ff701715.aspx) as Address-Based geocoding and reverse geocoding provider;
-* [OpenStreetMap](http://nominatim.openstreetmap.org/) as Address-Based geocoding and reverse geocoding provider (based on the Nominatim provider);
-* [Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) as Address-Based geocoding and reverse geocoding provider;
-* [CloudMade](http://developers.cloudmade.com/projects/show/geocoding-http-api) as Address-Based geocoding and reverse geocoding provider;
-* [Geoip](http://php.net/manual/book.geoip.php), the PHP extension, as IP-Based geocoding provider;
-* ChainProvider is a special provider that takes a list of providers and iterates
-  over this list to get information;
-* [MapQuest](http://open.mapquestapi.com/) as Address-Based geocoding and reverse geocoding provider;
-* [OIORest](http://geo.oiorest.dk/) as very accurate Address-Based geocoding and reverse geocoding provider (exclusively in Denmark);
-* [GeoCoder.ca](http://geocoder.ca/) as Address-Based geocoding and reverse geocoding provider (exclusively in USA & Canada);
-* [GeoCoder.us](http://geocoder.us/) as Address-Based geocoding provider (exclusively in USA);
-* [IGN OpenLS](http://www.ign.fr/) as Address-Based geocoding provider (exclusively in France);
-* [DataScienceToolkit](http://www.datasciencetoolkit.org/) as IP-Based geocoding provider or an Address-Based provider (exclusively in USA & Canada);
-* [Yandex](http://api.yandex.com.tr/maps/doc/geocoder/desc/concepts/About.xml) as Address-Based geocoding and reverse geocoding provider;
-* [GeoPlugin](http://www.geoplugin.com/webservices) as IP-Based geocoding provider;
-* [GeoIPs](http://www.geoips.com/developer/geoips-api) as IP-Based geocoding provider;
-* [MaxMind web service](http://dev.maxmind.com/geoip/legacy/web-services) as IP-Based geocoding provider (City/ISP/Org and Omni services);
-* [MaxMind binary file](http://dev.maxmind.com/geoip/legacy/downloadable) as IP-Based geocoding provider;
-* [Geonames](http://www.geonames.org/) as Place-Based geocoding and reverse geocoding provider;
-* [IpGeoBase](http://ipgeobase.ru/) as IP-Based geocoding provider (very accurate in Russia);
-* [Baidu](http://developer.baidu.com/map/geocoding-api.htm) as Address-Based geocoding and reverse geocoding provider (exclusively in China);
-* [TomTom](http://developer.tomtom.com/docs/read/Geocoding) as Address-Based geocoding and reverse geocoding provider;
-* [ArcGIS Online](http://resources.arcgis.com/en/help/arcgis-online-geocoding-rest-api/) as Address-Based geocoding and reverse geocoding provider.
+Address-based geocoding
+
+provider      | reverse | SSL | coverage | terms
+:------------- |:--------- |:--------- |:--------- |:-----
+[Google Maps](https://developers.google.com/maps/documentation/geocoding/) | yes | no | worldwide | requires API key. Limit 2500 requests per day
+[Google Maps for Business](https://developers.google.com/maps/documentation/business/) | yes | no | worldwide | requires API key. Limit 100,000 requests per day
+[Bing Maps](http://msdn.microsoft.com/en-us/library/ff701713.aspx) | yes | no | worldwide | requires API key. Limit 10,000 requests per month.
+[OpenStreetMap](http://wiki.openstreetmap.org/wiki/Nominatim) | yes | no | worldwide | heavy users (>1q/s) get banned
+Nominatim    | yes | supported | worldwide | requires a domain name (e.g. local installation)
+[MapQuest](http://developer.mapquest.com/web/products/dev-services/geocoding-ws)  | yes | no | worldwide | both open and [commercial service](http://platform.mapquest.com/geocoding/) require API key
+[OpenCage](http://geocoder.opencagedata.com/)  | yes | supported | worldwide | requires API key. 2500 requests/day free
+[Yandex](http://api.yandex.com/maps/)  | yes | no | worldwide
+[Geonames](http://www.geonames.org/commercial-webservices.html)  | yes |no | worldwide | requires registration, no free tier
+[TomTom](https://geocoder.tomtom.com/app/view/index)  | yes | required | worldwide | requires API key. First 2500 requests or 30 days free
+[ArcGIS Online](https://developers.arcgis.com/en/features/geocoding/) | yes | supported | worldwide | requires API key. 1250 requests free
+ChainProvider | | | | meta provider which iterates over a list of providers
+
+
+IP-based geocoding
+
+provider      | IPv6 | terms | notes
+:------------- |:--------- |:--------- |:---------
+[FreeGeoIp](http://freegeoip.net/) | yes
+[HostIp](http://www.hostip.info/use.html) | no
+[IpInfoDB](http://ipinfodb.com/) | no | city precision
+Geoip| ? | | wrapper around the [PHP extension](http://php.net/manual/en/book.geoip.php)
+[GeoPlugin](http://www.geoplugin.com/) | yes
+[GeoIPs](http://www.geoips.com/en/) | no | requires API key
+[MaxMind](https://www.maxmind.com/) web service | yes | requires Omni API key | City/ISP/Org and Omni services, IPv6 on country level
+MaxMind binary file | yes | | needs locally installed database files
+MaxMind [GeoIP2](https://www.maxmind.com/en/geoip2-databases) | yes |
 
 The [Geocoder Extra](https://github.com/geocoder-php/geocoder-extra) library contains even more providers!
 
@@ -144,12 +148,13 @@ A valid api key is required.
 ### GoogleMapsProvider ###
 
 The `GoogleMapsProvider` named `google_maps` is able to geocode and reverse geocode **street addresses**.
+A locale and a region can be set as well as an optional api key. This provider also supports SSL.
 
 
 ### GoogleMapsBusinessProvider ###
 
 The `GoogleMapsBusinessProvider` named `google_maps_business` is able to geocode and reverse geocode **street addresses**.
-A valid `Client ID` is required. The private key is optional.
+A valid `Client ID` is required. The private key is optional. This provider also supports SSL.
 
 
 ### BingMapsProvider ###
@@ -163,20 +168,12 @@ A valid api key is required.
 The `OpenStreetMapProvider` named `openstreetmap` is able to geocode and reverse
 geocode **street addresses**.
 
-**Warning:** The `OpenStreetMapsProvider` is **deprecated**, and you should
-rather use the `OpenStreetMapProvider`. See issue
-[#269](https://github.com/geocoder-php/Geocoder/issues/269).
 
 ### NominatimProvider ###
 
 The `NominatimProvider` named `nominatim` is able to geocode and reverse geocode **street addresses**.
 Access to a Nominatim server is required. See the [Nominatim
 Wiki Page](http://wiki.openstreetmap.org/wiki/Nominatim) for more information.
-
-### CloudMadeProvider ###
-
-The `CloudMadeProvider` named `cloudmade` is able to geocode and reverse geocode **street addresses**.
-A valid api key is required.
 
 
 ### GeoipProvider ###
@@ -193,33 +190,14 @@ The `ChainProvider` named `chain` is a special provider that takes a list of pro
 ### MapQuestProvider ###
 
 The `MapQuestProvider` named `map_quest` is able to geocode and reverse geocode **street addresses**.
+A valid api key is required. Access to [MapQuest's licensed endpoints](http://developer.mapquest.com/web/tools/getting-started/platform/licensed-vs-open)
+is provided via constructor argument.
+
+
+### OpenCageProvider ###
+
+The `OpenCageProvider` named `opencage` is able to geocode and reverse geocode **street addresses**.
 A valid api key is required.
-
-
-### OIORestProvider ###
-
-The `OIORestProvider` named `oio_rest` is able to geocode and reverse geocode **street addresses**, exclusively in Denmark.
-
-
-### GeocoderCaProvider ###
-
-The `GeocoderCaProvider` named `geocoder_ca` is able to geocode and reverse geocode **street addresses**, exclusively in USA & Canada.
-
-
-### GeocoderUsProvider ###
-
-The `GeocoderUsProvider` named `geocoder_us` is able to geocode **street addresses** only, exclusively in USA.
-
-
-### IGNOpenLSProvider ###
-
-The `IGNOpenLSProvider` named `ign_openls` is able to geocode **street addresses** only, exclusively in France.
-A valid OpenLS api key is required.
-
-
-### DataScienceToolkitProvider ###
-
-The `DataScienceToolkitProvider` named `data_science_toolkit` is able to geocode **IPv4 addresses** and **street adresses**, exclusively in USA & Canada.
 
 
 ### YandexProvider ###
@@ -259,23 +237,40 @@ package must be installed.
 It is worth mentioning that this provider has **serious performance issues**, and should **not**
 be used in production. For more information, please read [issue #301](https://github.com/geocoder-php/Geocoder/issues/301).
 
+### GeoIP2DatabaseProvider ###
+
+The `GeoIP2Provider` named `maxmind_geoip2` is able to geocode **IPv4 and IPv6
+addresses** only - it makes use of the MaxMind GeoIP2 databases or the
+webservice.
+
+It requires either the [database
+file](http://dev.maxmind.com/geoip/geoip2/geolite2/), or the
+[webservice](http://dev.maxmind.com/geoip/geoip2/web-services/) - represented by
+the GeoIP2 Provider, which is injected to the `GeoIP2Adapter`. The
+[geoip2/geoip2](https://packagist.org/packages/geoip2/geoip2) package must be
+installed.
+
+This provider will only work with the corresponding `GeoIP2Adapter`.
+
+##### Usage
+
+``` php
+<?php
+
+// Maxmind GeoIP2 Provider: e.g. the database reader
+$reader   = new \GeoIp2\Database\Reader('/path/to/database');
+
+$adapter  = new \Geocoder\HttpAdapter\GeoIP2Adapter($reader);
+$provider = new \Geocoder\Provider\GeoIP2Provider($adapter);
+$geocoder = new \Geocoder\Geocoder($provider);
+
+$result   = $geocoder->geocode('74.200.247.59');
+```
 
 ### GeonamesProvider ###
 
 The `GeonamesProvider` named `geonames` is able to geocode and reverse geocode **places**.
 A valid username is required.
-
-
-### IpGeoBaseProvider ###
-
-The `IpGeoBaseProvider` named `ip_geo_base` is able to geocode **IPv4 addresses** only, very accurate in Russia.
-
-
-### BaiduProvider ###
-
-The `BaiduProvider` named `baidu` is able to geocode and reverse geocode **street addresses**, exclusively in China.
-A valid api key is required.
-
 
 ### TomTomProvider ###
 
@@ -323,11 +318,11 @@ $geocoder->registerProviders(array(
 
 Parameters:
 
-* `$locale` is available for `YandexProvider`, `BingMapsProvider` and `TomTomProvider`.
+* `$locale` is available for `YandexProvider`, `BingMapsProvider`, `OpenCageProvider` and `TomTomProvider`.
 * `$region` is available for `GoogleMapsProvider` and `GoogleMapsBusinessProvider`.
 * `$toponym` is available for `YandexProvider`.
 * `$service` is available for `MaxMindProvider`.
-* `$useSsl` is available for `GoogleMapsProvider`, `GoogleMapsBusinessProvider`, `MaxMindProvider` and `ArcGISOnlineProvider`.
+* `$useSsl` is available for `GoogleMapsProvider`, `GoogleMapsBusinessProvider`, `OpenCageProvider`, `MaxMindProvider` and `ArcGISOnlineProvider`.
 * `$sourceCountry` is available for `ArcGISOnlineProvider`.
 * `$rootUrl` is available for `NominatimProvider`.
 
@@ -621,14 +616,13 @@ Rename the `phpunit.xml.dist` file to `phpunit.xml`, then uncomment the followin
 <php>
     <!-- <server name="IPINFODB_API_KEY" value="YOUR_API_KEY" /> -->
     <!-- <server name="BINGMAPS_API_KEY" value="YOUR_API_KEY" /> -->
-    <!-- <server name="CLOUDMADE_API_KEY" value="YOUR_API_KEY" /> -->
-    <!-- <server name="IGN_WEB_API_KEY" value="YOUR_API_KEY" /> -->
     <!-- <server name="GEOIPS_API_KEY" value="YOUR_API_KEY" /> -->
     <!-- <server name="MAXMIND_API_KEY" value="YOUR_API_KEY" /> -->
     <!-- <server name="GEONAMES_USERNAME" value="YOUR_USERNAME" /> -->
-    <!-- <server name="BAIDU_API_KEY" value="YOUR_API_KEY" /> -->
     <!-- <server name="TOMTOM_GEOCODING_KEY" value="YOUR_GEOCODING_KEY" /> -->
     <!-- <server name="TOMTOM_MAP_KEY" value="YOUR_MAP_KEY" /> -->
+    <!-- <server name="GOOGLE_GEOCODING_KEY" value="YOUR_GEOCODING_KEY" /> -->
+    <!-- <server name="OPENCAGE_API_KEY" value="YOUR_API_KEY" /> -->
 </php>
 ```
 

@@ -21,10 +21,21 @@ class CurlHttpAdapter implements HttpAdapterInterface
 
     private $connectTimeout;
 
-    public function __construct($timeout = null, $connectTimeout = null)
+    private $userAgent;
+
+    /**
+     * Array for bulk setting of curl options
+     * @see http://php.net/manual/en/curl.constants.php
+     * @var array
+     */
+    private $options;
+
+    public function __construct($timeout = null, $connectTimeout = null, $userAgent = null, $options = array())
     {
         $this->timeout = $timeout;
         $this->connectTimeout = $connectTimeout;
+        $this->userAgent = $userAgent;
+        $this->options = $options;
     }
 
     /**
@@ -46,6 +57,14 @@ class CurlHttpAdapter implements HttpAdapterInterface
 
         if ($this->connectTimeout) {
             curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout);
+        }
+
+        if ($this->userAgent) {
+            curl_setopt($c, CURLOPT_USERAGENT, $this->userAgent);
+        }
+
+        if ($this->options && is_array($this->options) && count($this->options)>0) {
+            curl_setopt_array($c, $this->options);
         }
 
         $content = curl_exec($c);
